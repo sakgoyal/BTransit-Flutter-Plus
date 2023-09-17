@@ -10,7 +10,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'package:latlong2/latlong.dart';
 import 'package:xml2json/xml2json.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,6 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Marker> _allMarkers = [];
+  // ignore: prefer_final_fields
   var _positions = [
     [
       37.22 + (Random().nextDouble() * 0.04),
