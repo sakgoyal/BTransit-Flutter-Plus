@@ -118,30 +118,53 @@ class _HomePageState extends State<HomePage> {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonData = convertXMLtoJSON(response.body);
-      for (var bus in jsonData['DocumentElement']['LatestInfoTable']) {
+      try {
+        _allMarkers.clear();
+        for (var bus in jsonData['DocumentElement']['LatestInfoTable']) {
+          _allMarkers.add(
+            Marker(
+              point: LatLng(
+                bus['Latitude'],
+                bus['Longitude'],
+              ),
+              builder: (context) => Image.asset('assets/bus.png'),
+            ),
+          );
+        }
+      } catch (e) {
         _allMarkers.add(
           Marker(
-            point: LatLng(
-              bus['Latitude'],
-              bus['Longitude'],
+            point: const LatLng(
+              37.233613,
+              -80.423670,
             ),
             builder: (context) => Image.asset('assets/bus.png'),
           ),
         );
-      }
-      _allMarkers.add(
-        Marker(
-          point: const LatLng(
-            37.233613,
-            -80.423670,
+        _allMarkers.add(
+          Marker(
+            point: const LatLng(
+              37.233,
+              -80.43,
+            ),
+            builder: (context) => Image.asset('assets/bus.png'),
           ),
-          builder: (context) => Image.asset('assets/bus.png'),
-        ),
-      );
+        );
 
-      setState(() {
-        print(_allMarkers);
-      });
+        _allMarkers.add(
+          Marker(
+            point: const LatLng(
+              37.253,
+              -80.42,
+            ),
+            builder: (context) => Image.asset('assets/bus.png'),
+          ),
+        );
+
+        setState(() {
+          _allMarkers = _allMarkers;
+        });
+      }
     } else {
       throw Exception('Failed to load data');
     }
@@ -156,6 +179,19 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     fetchData();
+    final notFilledPoints = <LatLng>[
+      const LatLng(37.253, -80.42),
+      const LatLng(37.22, -80.40),
+      const LatLng(37.20, -80.42),
+      const LatLng(37.22, -80.45),
+    ];
+
+    final notFilledDotedPoints = <LatLng>[
+      const LatLng(49.29, -2.57),
+      const LatLng(51.46, -6.43),
+      const LatLng(49.86, -8.17),
+      const LatLng(48.39, -3.49),
+    ];
     return Scaffold(
       appBar: AppBar(
         title: const Text('BT Transit Plus', style: TextStyle(fontSize: 40)),
@@ -187,6 +223,22 @@ class _HomePageState extends State<HomePage> {
                   MarkerLayer(
                     markers: _allMarkers,
                   ),
+                  // PolygonLayer(polygons: [
+                  //   Polygon(
+                  //     points: notFilledPoints,
+                  //     isFilled: false, // By default it's false
+                  //     borderColor: Colors.red,
+                  //     borderStrokeWidth: 4,
+                  //   ),
+                  //   Polygon(
+                  //     points: notFilledDotedPoints,
+                  //     isFilled: false,
+                  //     isDotted: true,
+                  //     borderColor: Colors.green,
+                  //     borderStrokeWidth: 4,
+                  //     color: Colors.yellow,
+                  //   ),
+                  // ]),
                 ],
               ),
             ),
