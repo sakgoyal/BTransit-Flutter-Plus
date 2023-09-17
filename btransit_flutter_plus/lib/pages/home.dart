@@ -23,9 +23,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Marker> _allMarkers = [];
+  var _positions = [
+    [
+      37.22 + (Random().nextDouble() * 0.04),
+      -80.45 + (Random().nextDouble() * 0.04)
+    ],
+    [
+      37.22 + (Random().nextDouble() * 0.04),
+      -80.45 + (Random().nextDouble() * 0.04)
+    ],
+    [
+      37.22 + (Random().nextDouble() * 0.04),
+      -80.45 + (Random().nextDouble() * 0.04)
+    ],
+  ];
 
   @override
   void initState() {
+    const oneSec = Duration(seconds: 3);
+    Timer.periodic(oneSec, (Timer t) => fetchData());
     super.initState();
 
     const seenIntroBoxKey = 'seenIntroBox(a)';
@@ -132,20 +148,19 @@ class _HomePageState extends State<HomePage> {
           );
         }
       } catch (e) {
+        var rng = Random();
+        _positions[0][0] += (rng.nextDouble() * 0.0005) - 0.00025;
+        _positions[0][1] += (rng.nextDouble() * 0.0005) - 0.00025;
+        _positions[1][0] += (rng.nextDouble() * 0.0005) - 0.00025;
+        _positions[1][1] += (rng.nextDouble() * 0.0005) - 0.00025;
+        _positions[2][0] += (rng.nextDouble() * 0.0005) - 0.00025;
+        _positions[2][1] += (rng.nextDouble() * 0.0005) - 0.00025;
+
         _allMarkers.add(
           Marker(
-            point: const LatLng(
-              37.233613,
-              -80.423670,
-            ),
-            builder: (context) => Image.asset('assets/bus.png'),
-          ),
-        );
-        _allMarkers.add(
-          Marker(
-            point: const LatLng(
-              37.233,
-              -80.43,
+            point: LatLng(
+              _positions[0][0],
+              _positions[0][1],
             ),
             builder: (context) => Image.asset('assets/bus.png'),
           ),
@@ -153,9 +168,19 @@ class _HomePageState extends State<HomePage> {
 
         _allMarkers.add(
           Marker(
-            point: const LatLng(
-              37.253,
-              -80.42,
+            point: LatLng(
+              _positions[1][0],
+              _positions[1][1],
+            ),
+            builder: (context) => Image.asset('assets/bus.png'),
+          ),
+        );
+
+        _allMarkers.add(
+          Marker(
+            point: LatLng(
+              _positions[2][0],
+              _positions[2][1],
             ),
             builder: (context) => Image.asset('assets/bus.png'),
           ),
@@ -178,20 +203,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    fetchData();
-    final notFilledPoints = <LatLng>[
-      const LatLng(37.253, -80.42),
-      const LatLng(37.22, -80.40),
-      const LatLng(37.20, -80.42),
-      const LatLng(37.22, -80.45),
-    ];
-
-    final notFilledDotedPoints = <LatLng>[
-      const LatLng(49.29, -2.57),
-      const LatLng(51.46, -6.43),
-      const LatLng(49.86, -8.17),
-      const LatLng(48.39, -3.49),
-    ];
     return Scaffold(
       appBar: AppBar(
         title: const Text('BT Transit Plus', style: TextStyle(fontSize: 40)),
