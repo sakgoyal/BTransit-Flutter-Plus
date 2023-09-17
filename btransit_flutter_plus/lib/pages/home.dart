@@ -119,35 +119,26 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // Timer mytimer = Timer.periodic(Duration(seconds: 1), (timer) {
-  //       DateTime timenow = DateTime.now();  //get current date and time
-  //       time = timenow.hour.toString() + ":" + timenow.minute.toString() + ":" + timenow.second.toString();
-  //       setState(() {
-
-  //       });
-  //       //mytimer.cancel() //to terminate this timer
-  //    });
-
   Future<void> fetchData() async {
     final response = await http.get(Uri.parse(
         'http://www.bt4uclassic.org/webservices/bt4u_webservice.asmx/GetCurrentBusInfo'));
 
     if (response.statusCode == 200) {
-      // Map<String, dynamic> jsonData = convertXMLtoJSON(response.body);
+      Map<String, dynamic> jsonData = convertXMLtoJSON(response.body);
       try {
         _allMarkers.clear();
-        throw Exception('Failed to load data');
-        // for (var bus in jsonData['DocumentElement']['LatestInfoTable']) {
-        //   _allMarkers.add(
-        //     Marker(
-        //       point: LatLng(
-        //         bus['Latitude'],
-        //         bus['Longitude'],
-        //       ),
-        //       builder: (context) => Image.asset('assets/bus.png'),
-        //     ),
-        //   );
-        // }
+        // throw Exception('Failed to load data');
+        for (var bus in jsonData['DocumentElement']['LatestInfoTable']) {
+          _allMarkers.add(
+            Marker(
+              point: LatLng(
+                double.parse(bus['Latitude']),
+                double.parse(bus['Longitude']),
+              ),
+              builder: (context) => Image.asset('assets/bus.png'),
+            ),
+          );
+        }
       } catch (e) {
         var rng = Random();
         _positions[0][0] += (rng.nextDouble() * 0.0005) - 0.00025;
